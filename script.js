@@ -1,5 +1,5 @@
 var radius=7;
-const threshold=20;
+const threshold=30;
 const levelX=threshold;
 const levelY=threshold;
 $(document).ready(()=>{
@@ -155,7 +155,7 @@ var visit=(graph,level,nodeLevel,location,taken,start,parent=-1)=>{
                 //console.log("drawing edge from : ",node,neb);
                 const delta=Math.abs(location[neb][0]-location[node][0]);
                 if(nodeLevel[node]==nodeLevel[neb] && delta>threshold){
-                    drawCurve(location[node][0],location[node][1],location[node][0],location[node][1]+threshold,location[neb][0],location[neb][1]+threshold,location[neb][0],location[neb][1]);
+                    drawCurve(location[node][0],location[node][1],location[node][0],location[node][1]+threshold/2,location[neb][0],location[neb][1]+threshold/2,location[neb][0],location[neb][1]);
                 }else{
                     drawEdge(location[node][0],location[node][1],location[neb][0],location[neb][1]);    
                 }
