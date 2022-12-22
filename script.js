@@ -15,6 +15,7 @@ $(document).ready(()=>{
     });
 })
 var parseInput=()=>{
+    const taken={};
     const graph={};
     const location={};
     const level=[];
@@ -79,14 +80,28 @@ var parseInput=()=>{
                 drawNode(level[currLevel+1],currY+threshold,neb);
                 location[neb]=[level[currLevel+1],currY+threshold];
                 level[currLevel+1]+=threshold;
-                drawEdge(location[node][0],location[node][1],location[neb][0],location[neb][1]);
                 nodeLevel[neb]=currLevel+1;
+            }
+            const edge=[node,neb];
+            const backEdge=[neb,node];
+            if(taken.hasOwnProperty(edge)==false && taken.hasOwnProperty(backEdge)==false){
+                const delta=Math.abs(location[neb][0]-location[node][0]);
+                if(nodeLevel[node]==nodeLevel[neb] && delta>threshold){
+                    drawCurve(location[node][0],location[node][1],location[node][0],location[node][1]+threshold,location[neb][0],location[neb][1]+threshold,location[neb][0],location[neb][1]);
+                }else{
+                    drawEdge(location[node][0],location[node][1],location[neb][0],location[neb][1]);    
+                }
+                
+                taken[edge]=true;
             }
         }
         
         index+=1;
 
         totalLevels=Math.max(totalLevels,currLevel);
+    }
+    for(let node in graph){
+        drawNode(location[node][0],location[node][1],node);
     }
 }
 var initializeNodes=(graph,arr)=>{
@@ -119,8 +134,20 @@ var drawEdge=(x1,y1,x2,y2)=>{
         ctx.beginPath();
 
         const delta=Math.sqrt(radius);
-        ctx.moveTo(x1+delta,y1+delta);
-        ctx.lineTo(x2-delta,y2-delta);
+        ctx.moveTo(x1,y1);
+        ctx.lineTo(x2,y2);
+        ctx.stroke();
+    } 
+}
+var drawCurve=(x1,y1,x2,y2,x3,y3,x4,y4)=>{
+    var canvas = document.getElementById('circles_canvas');
+    if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+        ctx.beginPath();
+
+        const delta=Math.sqrt(radius);
+        ctx.moveTo(x1,y1);
+        ctx.bezierCurveTo(x2,y2,x3,y3,x4,y4);
         ctx.stroke();
     } 
 }
