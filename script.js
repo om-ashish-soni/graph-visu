@@ -1,5 +1,5 @@
-var radius=10;
-const threshold=30;
+var radius=7;
+const threshold=20;
 const levelX=threshold;
 const levelY=threshold;
 $(document).ready(()=>{
@@ -23,7 +23,7 @@ var parseInput=()=>{
     let totalLevels=0;
     const text=$("#input").val();
     const lines=text.split(/\r?\n/);
-    //console.log("now");
+    ////console.log("now");
     
     for(let line of lines){
         const words=line.split(" ");
@@ -55,28 +55,95 @@ var parseInput=()=>{
         }
     }
 
-    //console.log("graph",graph);
+    ////console.log("graph",graph);
     let index=0;
     for(let node in graph){
-        //console.log("node : ",node);
-        if(nodeLevel.hasOwnProperty(node)==false) nodeLevel[node]=totalLevels+1;
+        ////console.log("node : ",node);
+        if(nodeLevel.hasOwnProperty(node)==false){
+            //console.log("calling visit on : ",node);
+            // nodeLevel[node]=totalLevels+1;
+            nodeLevel[node]=1;
+            //console.log("nodeLevel["+node+"] : ",nodeLevel[node]);
+            const maxLevels=visit(graph,level,nodeLevel,location,taken,node);
+            totalLevels=Math.max(totalLevels,maxLevels);
+        }
+        continue;
+        // {
+
+        // let currLevel=nodeLevel[node];
+        // if(level.length <= currLevel) level[currLevel]=threshold;
+        // if(level.length <= currLevel+1) level[currLevel+1]=threshold;
+        // const row=graph[node];
+        // ////console.log(node,row);
+        // ////console.log(location);
+        // let currY=currLevel*threshold;
+        // if(location.hasOwnProperty(node)==false){
+            
+        //     ////console.log("drawing node",node,"at : ",level[currLevel],currY);
+        //     drawNode(level[currLevel],currY,node);
+        //     location[node]=[level[currLevel],currY];
+        //     level[currLevel]+=threshold;
+        // }
+        // for(let neb of row){
+        //     if(location.hasOwnProperty(neb)==false){
+        //         ////console.log("drawing node",neb,"at : ",level[currLevel+1],currY+threshold);
+        //         drawNode(level[currLevel+1],currY+threshold,neb);
+        //         location[neb]=[level[currLevel+1],currY+threshold];
+        //         level[currLevel+1]+=threshold;
+        //         nodeLevel[neb]=currLevel+1;
+        //     }
+        //     const edge=[node,neb];
+        //     const backEdge=[neb,node];
+        //     if(taken.hasOwnProperty(edge)==false && taken.hasOwnProperty(backEdge)==false){
+        //         const delta=Math.abs(location[neb][0]-location[node][0]);
+        //         if(nodeLevel[node]==nodeLevel[neb] && delta>threshold){
+        //             drawCurve(location[node][0],location[node][1],location[node][0],location[node][1]+threshold,location[neb][0],location[neb][1]+threshold,location[neb][0],location[neb][1]);
+        //         }else{
+        //             drawEdge(location[node][0],location[node][1],location[neb][0],location[neb][1]);    
+        //         }
+                
+        //         taken[edge]=true;
+        //     }
+        // }
+        
+        // index+=1;
+
+        // totalLevels=Math.max(totalLevels,currLevel);
+        // }
+
+    }
+    for(let node in graph){
+        drawNode(location[node][0],location[node][1],node);
+
+    }
+}
+var visit=(graph,level,nodeLevel,location,taken,start,parent=-1)=>{
+    queue=[]
+    queue.push(start);
+    const visited={};
+    visited[start]=true;
+    let maxLevel=0;
+    while(queue.length>0){
+        const node=queue.pop();
+        //console.log("visiting : ",node,"at : ",location[node]);
+        //console.log("at level : ",nodeLevel[node])
         let currLevel=nodeLevel[node];
         if(level.length <= currLevel) level[currLevel]=threshold;
         if(level.length <= currLevel+1) level[currLevel+1]=threshold;
         const row=graph[node];
-        //console.log(node,row);
-        //console.log(location);
         let currY=currLevel*threshold;
+
+        maxLevel=Math.max(maxLevel,nodeLevel[node]);
+        //console.log("location on : ",node,location.hasOwnProperty(node));
         if(location.hasOwnProperty(node)==false){
-            
-            //console.log("drawing node",node,"at : ",level[currLevel],currY);
+            //console.log("going to draw : ",node);
             drawNode(level[currLevel],currY,node);
             location[node]=[level[currLevel],currY];
             level[currLevel]+=threshold;
         }
         for(let neb of row){
             if(location.hasOwnProperty(neb)==false){
-                //console.log("drawing node",neb,"at : ",level[currLevel+1],currY+threshold);
+                ////console.log("drawing node",neb,"at : ",level[currLevel+1],currY+threshold);
                 drawNode(level[currLevel+1],currY+threshold,neb);
                 location[neb]=[level[currLevel+1],currY+threshold];
                 level[currLevel+1]+=threshold;
@@ -85,24 +152,24 @@ var parseInput=()=>{
             const edge=[node,neb];
             const backEdge=[neb,node];
             if(taken.hasOwnProperty(edge)==false && taken.hasOwnProperty(backEdge)==false){
+                //console.log("drawing edge from : ",node,neb);
                 const delta=Math.abs(location[neb][0]-location[node][0]);
                 if(nodeLevel[node]==nodeLevel[neb] && delta>threshold){
                     drawCurve(location[node][0],location[node][1],location[node][0],location[node][1]+threshold,location[neb][0],location[neb][1]+threshold,location[neb][0],location[neb][1]);
                 }else{
                     drawEdge(location[node][0],location[node][1],location[neb][0],location[neb][1]);    
                 }
-                
                 taken[edge]=true;
             }
+            if(visited.hasOwnProperty(neb)==false){
+                visited[neb]=true;
+                queue.push(neb);
+            }
+            // const nextLevel=(visited==false)?visit(graph,level,nodeLevel,location,taken,neb,node):nodeLevel[neb];
+            
         }
-        
-        index+=1;
-
-        totalLevels=Math.max(totalLevels,currLevel);
     }
-    for(let node in graph){
-        drawNode(location[node][0],location[node][1],node);
-    }
+    return maxLevel;
 }
 var initializeNodes=(graph,arr)=>{
     for(let node of arr){
@@ -121,7 +188,7 @@ var drawNode=(x,y,text)=>{
         ctx.fill();
 
         ctx = canvas.getContext("2d");
-        ctx.font = '8pt Calibri';
+        ctx.font = '7pt Helvetica';
         ctx.fillStyle = 'white';
         ctx.textAlign = 'center';
         ctx.fillText(text, x, y+3);

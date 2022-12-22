@@ -10,16 +10,29 @@
     </script>
 </head>
 <style>
-    
+    div, canvas {
+        position:relative;
+    }
     #circles_canvas{
-        width:60vw;
-        height: 50vw;
-        scroll-behavior: auto;
-        border:1px solid;
+        width:90%;
+        height: 90%;
+        /* overflow-y: scroll; /* scrolling vertical only */
+        /* overflow-x:scroll; */ 
+        border: 1px solid green;
     }
     #input{
         width:60%;
         height:20%;
+    }
+    .wrapper {
+        top:10px;
+        left:10px;
+        width: 318px; /* adjusted hard-coded scrollbar width; you should set this with js */
+        height: 300px;
+        border: 2px solid black;
+        margin:30px 0 2;
+        overflow-y: scroll; /* scrolling vertical only */
+        overflow-x:scroll;
     }
 </style>
 <body>
