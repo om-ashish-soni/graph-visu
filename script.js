@@ -5,6 +5,7 @@ const levelY=threshold;
 $(document).ready(()=>{
     $("h1").css("color","green");
     // drawNode(10,20,0);
+    
     // drawNode(50,100,1);
     // drawEdge(10,20,50,100);
     $("#input").on('change keyup paste', ()=>{
