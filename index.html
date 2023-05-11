@@ -6,46 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Graph Visualizer</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="script.js" >
-    </script>
+    <script src="svgVisuScript.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
-<style>
-    div, canvas {
-        position:relative;
-    }
-    #circles_canvas{
-        width:90%;
-        height: 90%;
-        /* overflow-y: scroll; /* scrolling vertical only */
-        /* overflow-x:scroll; */ 
-        border: 1px solid green;
-    }
-    #input{
-        width:60%;
-        height:20%;
-    }
-    .wrapper {
-        top:10px;
-        left:10px;
-        width: 318px; /* adjusted hard-coded scrollbar width; you should set this with js */
-        height: 300px;
-        border: 2px solid black;
-        margin:30px 0 2;
-        overflow-y: scroll; /* scrolling vertical only */
-        overflow-x:scroll;
-    }
-    
-</style>
 <body>
-    <center>
-    <h1>Shree Ganeshay Namah</h1>
-    <h2>Graph Visualizer by Om Ashish Soni</h2>
-    <div>
-        <textarea id="input" >
-
-        </textarea>
+    <div id="header">
+        <h1>Graph Visualizer</h1>
+        <p>Visualize your complex graph with ease!</p>
     </div>
-    <canvas id="circles_canvas"></canvas>
-    </center>
+    <div id="instructions">
+        <h2>Instructions</h2>
+        <ol>
+            <li>Enter your graph data in the input area below:</li>
+            <ul>
+                <li>Each line represents a node or an edge in the graph.</li>
+                <li>To define a node, enter a single number.</li>
+                <li>To define an edge, enter two numbers separated by a space, representing the source and destination nodes.</li>
+                </pre>
+            </ul>
+            <li>As you make changes in the input area, the graph visualization will update automatically in real-time.</li>
+        </ol>
+    </div>
+    <div id="container">
+        <div id="input-panel">
+            <h2>Graph Input</h2>
+            <textarea id="input"></textarea>
+        </div>
+        <div id="output-panel">
+            <h2>Graph Output Visualization</h2>
+            <svg id="graph-svg"></svg>
+        </div>
+    </div>
+
+    <div id="footer">
+        <p>&copy; 2023 Graph Visualizer. All rights reserved.</p>
+    </div>
 </body>
 </html>

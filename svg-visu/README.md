@@ -32,12 +32,9 @@ The project utilizes the following dependencies:
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   ```
 
-- **SVG**: The Scalable Vector Graphics (SVG) format is used to draw the nodes and edges of the graph in the updated version of the project. It provides a resolution-independent and high-quality representation of the graph.
-
-To include SVG in the project, the <svg> tag is used. The SVG element is embedded within the HTML structure and acts as a container for the graphical elements of the graph.
+- **Canvas**: The HTML5 canvas element is used to draw the nodes and edges of the graph. It is included in the project through the following canvas tag:
   ```html
-  <svg id="graph-svg"></svg>
-
+  <canvas id="circles_canvas"></canvas>
   ```
 
 These dependencies are necessary for the proper functioning of the graph visualizer.
