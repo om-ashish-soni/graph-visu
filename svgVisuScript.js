@@ -1,27 +1,95 @@
-const radius = 7;
+const radius = 10;
 const threshold = 30;
 const levelX = threshold;
 const levelY = threshold;
 
 $(document).ready(()=>{
-    // $("h1").css("color","green");
-    // drawNode(10,20,0);
     
-    // drawNode(50,100,1);
-    // drawEdge(10,20,50,100);
+    const input = document.querySelector("#input");
+    const svg = document.querySelector("#graph-svg");
+    $("#input").val(`1
+2
+3
+4
+5
+1 2
+1 3
+3 5
+5 4
+2 4`);
+    trigger(input,svg);
+
     $("#input").on('change keyup paste', ()=>{
         console.log("key up change input");
         document.querySelector("h1").style.color = "green";
-        const input = document.querySelector("#input");
-        const svg = document.querySelector("#graph-svg");
-        clearSVG(svg);
-        parseInput(input.value, svg);
+        
+        trigger(input,svg);
         
 
         
     });
+    // $("#download-btn").on("click", function() {
+    //     const svg = document.querySelector("#graph-svg");
+    //     const svgData = new XMLSerializer().serializeToString(svg);
+    //     const blob = new Blob([svgData], { type: "image/svg+xml" });
+    //     const url = URL.createObjectURL(blob);
+      
+    //     const link = document.createElement("a");
+    //     link.href = url;
+    //     link.download = "graph.svg";
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    //     URL.revokeObjectURL(url);
+    //   });
+    // Add this code inside the $(document).ready() function
+$("#download-btn").on("click", function() {
+    const svg = document.querySelector("#graph-svg");
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svg);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const DOMURL = window.URL || window.webkitURL || window;
+    const img = new Image();
+    const svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+    const url = DOMURL.createObjectURL(svgBlob);
+  
+    img.onload = function() {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      const pngBlob = canvas.toDataURL("image/png");
+      const downloadLink = document.createElement("a");
+      downloadLink.href = pngBlob;
+      downloadLink.download = "graph.png";
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      DOMURL.revokeObjectURL(pngBlob);
+  
+      // Display the downloaded SVG above the footer
+
+    //   const svgContainer = document.createElement("div");
+    //   svgContainer.innerHTML = svgString;
+    //   document.body.insertBefore(svgContainer, document.getElementById("footer"));
+  
+    //   svgContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    };
+  
+    img.src = url;
+  });
+  
 })
 
+const trigger=(input,svg)=>{
+    clearSVG(svg);
+    parseInput(input.value, svg);
+}
+
+// Add this code inside the $(document).ready() function
+
+  
 // document.addEventListener('DOMContentLoaded', () => {
 //     document.querySelector("h1").style.color = "green";
 //     const input = document.querySelector("#input");
@@ -86,6 +154,13 @@ const parseInput = (text, svg) => {
         }
         index++;
     }
+    // const svgWidth = totalLevels * threshold;
+    // const svgHeight = level.length * threshold;
+  
+    // // Set the SVG dimensions
+    // svg.setAttribute("width", svgWidth);
+    // svg.setAttribute("height", svgHeight);
+
     console.log("graph",graph);
     for (let node in graph) {
         drawNode(svg, location[node][0], location[node][1], node);
